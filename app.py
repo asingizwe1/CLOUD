@@ -41,6 +41,11 @@ def delete(task_id):
         db.session.commit()
     return redirect(url_for("home"))
 
+@app.route("/db-check")
+def db_check():
+    tasks = Task.query.all()
+    return f"Total tasks in database: {len(tasks)} — Tasks: {[t.content for t in tasks]}"
+
 # ✅ NEW — Update route
 @app.route("/edit/<int:task_id>", methods=["GET", "POST"])
 def edit(task_id):
