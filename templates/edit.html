@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flask To-Do App</title>
+    <title>Edit Task</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -56,64 +56,24 @@
             background: #1d4ed8;
         }
 
-        ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        li {
-            background: #eef4ff;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
         a {
-            text-decoration: none;
-            color: white;
-            background: #dc2626;
-            padding: 8px 12px;
-            border-radius: 6px;
-        }
-
-        a:hover {
-            background: #b91c1c;
-        }
-
-        .empty {
+            display: block;
             text-align: center;
-            color: #666;
+            margin-top: 10px;
+            color: #dc2626;
+            text-decoration: none;
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <h1>My To-Do List</h1>
-
+        <h1>Edit Task</h1>
         <form method="POST">
-            <input type="text" name="task" placeholder="Enter a task" required>
-            <button type="submit">Add</button>
+            <input type="text" name="task" value="{{ task.content }}" required>
+            <button type="submit">Update</button>
         </form>
-
-        {% if tasks %}
-        <ul>
-            {% for task in tasks %}
-            <li>
-                <span>{{ task.content }}</span>
-                <div style="display:flex; gap:8px;">
-                    <a href="{{ url_for('edit', task_id=task.id) }}" style="background:#2563eb;">Edit</a>
-                    <a href="{{ url_for('delete', task_id=task.id) }}">Delete</a>
-                </div>
-            </li>
-            {% endfor %}
-        </ul>
-        {% else %}
-        <p class="empty">No tasks added yet.</p>
-        {% endif %}
+        <a href="{{ url_for('home') }}">Cancel</a>
     </div>
 </body>
 

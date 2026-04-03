@@ -4,11 +4,12 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 
-# Use DATABASE_URL from environment (Render will provide this)
 database_url = os.environ.get('DATABASE_URL', 'sqlite:///tasks.db')
 if database_url.startswith("postgres://"):
     database_url = database_url.replace("postgres://", "postgresql://", 1)
-app.config['SQLALCHEMY_DATABASE_URI'] = database_urlapp.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-fallback-key')
 
 db = SQLAlchemy(app)
@@ -39,6 +40,18 @@ def delete(task_id):
         db.session.delete(task)
         db.session.commit()
     return redirect(url_for("home"))
+
+# ✅ NEW — Update route
+@app.route("/edit/<int:task_id>", methods=["GET", "POST"])
+def edit(task_id):
+    task = Task.query.get(task_id)
+    if request.method == "POST":
+        new_content = request.form.get("task")
+        if new_content and new_content.strip():
+            task.content = new_content.strip()
+            db.session.commit()
+        return redirect(url_for("home"))
+    return render_template("edit.html", task=task)
 
 if __name__ == "__main__":
     app.run(debug=True)
